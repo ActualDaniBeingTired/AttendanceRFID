@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 4.84, "attrs": {} },
+    { "type": "board-mfrc522", "id": "rfid1", "top": -175.45, "left": -63.76, "attrs": {} },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -377.6,
+      "left": -100,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 40.8,
+      "left": -84.6,
+      "attrs": { "volume": "0.5" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "rfid1:3.3V", "esp:3V3", "green", [ "h-38.4", "v96" ] ],
+    [ "rfid1:GND", "esp:GND.1", "black", [ "h-57.6", "v230.4", "h105.6", "v9.6" ] ],
+    [ "rfid1:RST", "esp:4", "#8f4814", [ "h-48", "v297.6", "h230.4", "v-76.8" ] ],
+    [ "rfid1:SDA", "esp:5", "gold", [ "h-19.2", "v-57.6", "h249.6", "v307.2" ] ],
+    [ "rfid1:SCK", "esp:18", "orange", [ "h-28.8", "v-76.8", "h268.8", "v307.2" ] ],
+    [ "rfid1:MISO", "esp:19", "blue", [ "h-38.4", "v-105.6", "h288", "v307.2" ] ],
+    [ "rfid1:MOSI", "esp:23", "violet", [ "h-48", "v-105.6", "h307.2", "v259.2" ] ],
+    [ "lcd1:VCC", "esp:5V", "red", [ "h-48", "v537.7" ] ],
+    [ "lcd1:GND", "esp:GND.1", "black", [ "h-57.6", "v499.2", "h134.4" ] ],
+    [ "lcd1:SDA", "esp:21", "white", [ "h-38.4", "v317", "h259.2", "v86.4" ] ],
+    [ "lcd1:SCL", "esp:22", "gray", [ "h-28.8", "v297.9", "h240", "v67.2" ] ],
+    [ "bz1:1", "esp:GND.1", "black", [ "v9.6", "h57.6", "v19.2" ] ],
+    [ "bz1:2", "esp:27", "red", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
