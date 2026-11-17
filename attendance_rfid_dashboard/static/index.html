@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance RFID | Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">RF</div><div><b>Attend<span>RFID</span></b><small>ATTENDANCE SYSTEM</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+    <button class="nav-item" data-view="attendance"><span>▤</span> Attendance</button>
+    <button class="nav-item" data-view="students"><span>♙</span> Students</button>
+    <button class="nav-item" data-view="unknown"><span>⌁</span> Unknown Cards</button>
+    <div class="sidebar-bottom">
+      <div class="device-card"><div class="device-top"><span class="pulse"></span> SYSTEM STATUS</div><b id="system-status">Connecting...</b><small id="db-label">PostgreSQL connection</small></div>
+      <div class="profile"><div class="avatar">AD</div><div><b>Administrator</b><small>System operator</small></div><span class="dots">•••</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><div class="eyebrow">CAMPUS MANAGEMENT / RFID</div><h1 id="page-title">Dashboard Overview</h1></div>
+      <div class="top-actions"><div class="live-pill"><span class="pulse"></span> LIVE DATA</div><div class="date-chip" id="today-label">—</div></div>
+    </header>
+
+    <section id="view-overview" class="view active">
+      <div class="welcome-row"><div><h2>Attendance overview</h2><p>Ringkasan kehadiran mahasiswa berdasarkan data RFID.</p></div><div class="date-filter"><label for="overview-date">Attendance date</label><input type="date" id="overview-date"></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-head"><span>Total Students</span><span class="stat-icon violet">♙</span></div><strong id="total-students">—</strong><small>Registered students</small></article>
+        <article class="stat-card"><div class="stat-head"><span>Present</span><span class="stat-icon green">✓</span></div><strong id="present-count">—</strong><small id="ontime-caption">On-time attendance</small></article>
+        <article class="stat-card"><div class="stat-head"><span>Late</span><span class="stat-icon orange">◷</span></div><strong id="late-count">—</strong><small>Arrived after deadline</small></article>
+        <article class="stat-card"><div class="stat-head"><span>Absent</span><span class="stat-icon red">!</span></div><strong id="absent-count">—</strong><small>Not recorded as present</small></article>
+      </div>
+
+      <div class="content-grid">
+        <article class="panel trend-panel">
+          <div class="panel-heading"><div><h3>Attendance trends</h3><p>Daily attendance activity</p></div><select id="trend-days"><option value="14">Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option></select></div>
+          <div class="chart-legend"><span><i class="legend-dot blue"></i> Present</span><span><i class="legend-dot orange"></i> Late</span></div>
+          <div id="trend-chart" class="chart-area"><div class="empty-state">Loading chart...</div></div>
+        </article>
+        <article class="panel rate-panel">
+          <div class="panel-heading"><div><h3>Attendance rate</h3><p>Selected date</p></div><span class="mini-tag">DAILY</span></div>
+          <div class="rate-wrap"><div class="donut" id="rate-donut"><div><strong id="rate-value">0%</strong><small>Attendance</small></div></div></div>
+          <div class="rate-breakdown"><div><span><i class="legend-dot green"></i> Present</span><b id="rate-present">—</b></div><div><span><i class="legend-dot red"></i> Absent</span><b id="rate-absent">—</b></div></div>
+        </article>
+      </div>
+
+      <article class="panel table-panel">
+        <div class="panel-heading"><div><h3>Latest attendance</h3><p>Latest RFID taps for the selected date</p></div><button class="text-button" data-goto="attendance">View all →</button></div>
+        <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>RFID UID</th><th>TIME</th><th>DEVICE</th><th>STATUS</th></tr></thead><tbody id="recent-body"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody></table></div>
+      </article>
+    </section>
+
+    <section id="view-attendance" class="view">
+      <div class="welcome-row"><div><h2>Attendance records</h2><p>Telusuri dan unduh catatan absensi mahasiswa.</p></div><button class="primary-button" id="export-btn">↓ Export CSV</button></div>
+      <div class="panel filters">
+        <div class="filter-field"><label>Search student</label><input id="attendance-search" placeholder="Name, student ID, or UID"></div>
+        <div class="filter-field"><label>Start date</label><input type="date" id="start-date"></div>
+        <div class="filter-field"><label>End date</label><input type="date" id="end-date"></div>
+        <div class="filter-field"><label>Status</label><select id="status-filter"><option value="">All statuses</option><option value="on_time">On time</option><option value="late">Late</option></select></div>
+        <button class="secondary-button" id="apply-filter">Apply filters</button>
+      </div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h3>Attendance log</h3><p id="attendance-count">Records</p></div></div><div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>RFID UID</th><th>DATE</th><th>TIME</th><th>DEVICE</th><th>STATUS</th></tr></thead><tbody id="attendance-body"><tr><td colspan="7" class="empty-state">Loading...</td></tr></tbody></table></div></article>
+    </section>
+
+    <section id="view-students" class="view">
+      <div class="welcome-row"><div><h2>Student directory</h2><p>Daftar mahasiswa dan kartu RFID yang terhubung.</p></div><div class="search-box"><input id="student-search" placeholder="Search students..."></div></div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h3>Registered students</h3><p id="student-count">Student records</p></div></div><div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>RFID UID</th><th>ATTENDANCE LOGS</th><th>LATE RECORDS</th><th>CARD STATUS</th></tr></thead><tbody id="students-body"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody></table></div></article>
+    </section>
+
+    <section id="view-unknown" class="view">
+      <div class="welcome-row"><div><h2>Unknown RFID cards</h2><p>Kartu yang terbaca perangkat tetapi belum terdaftar.</p></div></div>
+      <div class="notice"><b>ℹ Review required</b><span>UID di bawah belum terhubung dengan data mahasiswa. Verifikasi sebelum mendaftarkan kartu.</span></div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h3>Unrecognized card activity</h3><p id="unknown-count">Unknown scans</p></div></div><div class="table-wrap"><table><thead><tr><th>RFID UID</th><th>DEVICE</th><th>DATE & TIME</th><th>REVIEW STATUS</th></tr></thead><tbody id="unknown-body"><tr><td colspan="4" class="empty-state">Loading...</td></tr></tbody></table></div></article>
+    </section>
+    <footer>Attendance RFID System <span>•</span> FastAPI + PostgreSQL</footer>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
